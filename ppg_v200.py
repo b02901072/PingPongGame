@@ -3,8 +3,13 @@
 import pygame, sys, math, string, random
 import os
 import DrawGraph
+from util import *
 #import pygame.freetype
+
+from Screen import *
 pygame.init()
+
+
 
 screen_width = 1080
 screen_height = 720

@@ -1,6 +1,19 @@
-如果你看到這一行，表示你下載成功了。
-感謝你願意進行你現在正在做的事。
+# Ping Pong Game
 
-1. 先安裝 Python 與 Pygame，並依照PDF檔中的指示設定。
-2. 直接運行ppgame_ver101中的ppg_v101。
-3. 如果你的電腦沒有炸開來的話，應該就是成功了。
+## Requirements
+- Python3
+- Pygame
+
+## How to start?
+
+### Mac OS X
+```
+brew install python3
+pip3 install pygame
+python3 ppg_v200.py
+```
+
+### In Development
+```
+python3 main.py
+```
