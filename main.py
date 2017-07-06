@@ -6,8 +6,7 @@ import DrawGraph
 from Screen import *
 from util import quit_game
 
-from enum import Enum
-class GameState(Enum):
+class GameState():
     START = 1
     HOMEPAGE = 2
     DUELMODE = 3
@@ -27,6 +26,18 @@ gamestate = GameState.START
 while True:
     screen.display_background()
     if gamestate == GameState.START:
+        screen.display_text("Ping Pong Game", COLOR.WHITE, 160, (100, 250))
+        screen.display_text("Ver 2.00", COLOR.WHITE, 100, (400, 400))
+        screen.display_text("Press any button to START", COLOR.WHITE, 40, (350, 500))
+        for events in pygame.event.get():
+            if events.type == pygame.KEYDOWN:
+                if events.key == pygame.K_ESCAPE:
+                    quit_game()
+                else:
+                    quit_game()
+                    #gameState = GameState.HOMEPAGE
+                    #cursor[0] = 0
+    elif gamestate == GameState.HOMEPAGE:
         for events in pygame.event.get():
             if events.type == pygame.KEYDOWN:
                 if events.key == pygame.K_ESCAPE:

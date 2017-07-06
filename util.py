@@ -11,11 +11,6 @@ class COLOR():
 	BLUE = 0, 0, 255
 	YELLOW = 255, 255, 0
 
-# POSITION DEFINITION
-class POSITION():
-	BORDER = 0, 0
-	TITLE = 30, 30
-
 def quit_game():
     pygame.display.quit()
     pygame.quit()
