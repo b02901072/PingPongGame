@@ -1,6 +1,12 @@
 import pygame
 import sys
 
+# Utility Function
+def quit_game():
+    pygame.display.quit()
+    pygame.quit()
+    sys.exit()
+
 # COLOR DEFINITION
 class COLOR():
 	BLACK = 0, 0, 0
@@ -11,7 +17,37 @@ class COLOR():
 	BLUE = 0, 0, 255
 	YELLOW = 255, 255, 0
 
-def quit_game():
-    pygame.display.quit()
-    pygame.quit()
-    sys.exit()
+
+class SelectList():
+
+	def __init__(self, **kwargs):
+
+		self.text = kwargs['text']
+		self.len = len(self.text)
+		self.pos_x = [kwargs['pos_x']] * self.len
+		self.pos_y = [0] * self.len
+		self.default_color = kwargs['default_color']
+		self.select_color = kwargs['select_color']
+		self.color = [self.default_color] * self.len
+		self.text_size = [kwargs['text_size']] * self.len
+		self.cursor_size = kwargs['cursor_size']
+		
+		for i in range(self.len):
+			self.pos_y[i] = kwargs['pos_y_initial'] + i * kwargs['pos_y_spacing']
+		try:
+			self.pos_x[self.len-1] = kwargs['pos_x_last']
+		except:
+			pass
+		try:
+			self.pos_y[self.len-1] = kwargs['pos_y_last']
+		except:
+			pass
+
+		self.cursor_index = 0
+		self.color[self.cursor_index] = self.select_color
+
+	def move_cursor(self, n):
+		self.color[self.cursor_index] = self.default_color
+		self.cursor_index = (self.cursor_index + n) % self.len
+		self.color[self.cursor_index] = self.select_color
+
