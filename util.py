@@ -1,11 +1,20 @@
 import pygame
-import sys
+import sys, math
 
 # Utility Function
 def quit_game():
     pygame.display.quit()
     pygame.quit()
     sys.exit()
+
+def posi_or_nega(x):
+	if x >= 0:
+		return 1
+	else:
+		return -1
+
+def distance(a, b):
+	return math.sqrt((a.pos_x-b.pos_x)**2 + (a.pos_y-b.pos_y)**2)
 
 # COLOR DEFINITION
 class COLOR():

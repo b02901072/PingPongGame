@@ -8,29 +8,19 @@ class Screen():
         self.scale = 1.0
         self.width = int(1080*scale)
         self.height = int(720*scale)
-
         self.screen = pygame.display.set_mode((self.width, self.height))
-
-        self.background = None
-        self.top_margin = None
-
-    # IMAGES SETTING
-    def set_background(self, image_filename):
-        self.background = pygame.image.load(image_filename).convert()
-
-    def set_top_margin(self, image_filename):
-        self.top_margin = pygame.image.load(image_filename).convert()
-
+        
+        # IMAGES SETTING
+        self.background = pygame.image.load('images/tech_1080.bmp').convert()
+        self.top_margin = pygame.image.load('images/960_60_tech.jpg').convert()
+        self.wormhole_100 = pygame.image.load('images/100_blackhole_light.png').convert_alpha()
+        self.wormhole_150 = pygame.transform.scale(self.wormhole_100, (150, 150))
 
     # DISPLAY FUNCTION
     def display_background(self):
-        if self.background is None:
-            raise
         self.screen.blit(self.background, (0, 0))
 
     def display_top_margin(self):
-        if self.top_margin is None:
-            raise
         self.screen.blit(self.top_margin, (0, 0))
 
     def display_text(self, text, color, size, position):
@@ -52,13 +42,22 @@ class Screen():
                 self.display_diamond(cursor_size, cursor_size, pos_x - 25, pos_y + 1/4*text_size, color)
 
     def display_game(self, game):
+        
+        if game.is_wormhole_on == True:
+            for wh in game.wormholes:
+                pos_x = int(wh.pos_x*self.scale)
+                pos_y = int(wh.pos_y*self.scale)
+                size = int(wh.size*self.scale)
+                #pygame.draw.circle(self.screen, COLOR.WHITE, (pos_x, pos_y), 52, 0)
+                self.screen.blit(self.wormhole_150, (pos_x-0.5*size, pos_y-0.5*size))
+
         for ball in game.balls:
             self.display_ball(ball)
-        for bars in game.bars:
-            self.display_bars(bar)
+        for bar in game.bars:
+            self.display_bar(bar)
 
     def display_ball(self, ball):
-        if accel == True:
+        if ball.accel == True:
             color = ball.accel_color
         else:
             color = ball.default_color
@@ -71,7 +70,7 @@ class Screen():
         color = bar.color
         pos_x = int(bar.pos_x * self.scale)
         pos_y = int(bar.pos_y * self.scale)
-        half_length = int(bar.half_length * self.scale)
+        half_length = int(0.5*bar.length * self.scale)
         width = int(bar.width * self.scale)
         pygame.draw.line(self.screen, color, (pos_x, pos_y-half_length), (pos_x, pos_y+half_length), width)
 

@@ -17,10 +17,7 @@ class GameState():
     DEFAULT = 0
 
 pygame.init()
-
 screen = Screen()
-screen.set_background('./images/tech_1080.bmp')
-screen.set_top_margin('./images/960_60_tech.jpg')
 
 gamestate = GameState.START
 
@@ -84,6 +81,11 @@ while True:
                     cursor = gamemode_select_list.cursor_index
                     if cursor == 0:
                         gamemode = 'duel'
+                        player = 1
+                        gamestate = GameState.DUEL_SETTING
+                    elif cursor == 1:
+                        gamemode = 'duel'
+                        player = 2
                         gamestate = GameState.DUEL_SETTING
     
     # DUEL模式遊戲設定
@@ -104,18 +106,24 @@ while True:
                     cursor = duel_select_list.cursor_index
                     if cursor == duel_select_list.len-1:
                         gamestate = GameState.PREPARATION
+                        game = Duel()
     
     # 準備階段
     elif gamestate == GameState.PREPARATION:
         screen.display_text('Press SPACE to start the game.', COLOR.WHITE, 50, (300, 400))
+        if gamemode == 'duel':
+            if player == 1:
+                screen.display_text('P1 : %d   VS   Com : %d'%(game.score_1, game.score_2), COLOR.WHITE, 40, (400, 300))
+            elif player == 2:
+                screen.display_text('P1 : %d   VS    P2 : %d'%(game.score_1, game.score_2), COLOR.WHITE, 40, (400, 300))
         for events in pygame.event.get():
             if events.type == pygame.KEYDOWN:
                 if events.key == pygame.K_ESCAPE:
                     quit_game()
                 elif events.key == pygame.K_SPACE:
                     gamestate = GameState.INGAME
-                    game = Duel()
-    
+                    game.new_game()
+                    game.start_clock()
     # 正式遊戲
     elif gamestate == GameState.INGAME:
         #screen.display_top_margin()
@@ -124,15 +132,24 @@ while True:
                 if events.key == pygame.K_ESCAPE:
                     quit_game()
                 if events.key == pygame.K_w:
-                    bars[0].dir_y = -1
+                    game.bars[0].dir_y = -1
                 elif events.key == pygame.K_s:
-                    bars[0].dir_y = 1
-            if events.type == pygame.KEYUP:
+                    game.bars[0].dir_y = 1
+                elif events.key == pygame.K_UP:
+                    game.bars[1].dir_y = -1
+                elif events.key == pygame.K_DOWN:
+                    game.bars[1].dir_y = 1
+            elif events.type == pygame.KEYUP:
                 if events.key == pygame.K_w or events.key == pygame.K_s:
-                    bars[0].dir_y = 0
+                    game.bars[0].dir_y = 0
+                if events.key == pygame.K_UP or events.key == pygame.K_DOWN:
+                    game.bars[1].dir_y = 0
 
-        game.loop()
+        is_gameover = game.loop()
         screen.display_game(game)
+        if is_gameover:
+            gamestate = GameState.PREPARATION
+
 
     # 更新遊戲畫面
     pygame.display.update()
