@@ -1,4 +1,4 @@
-from util import COLOR
+from util import *
 
 class Bar():
 	def __init__(self, 
@@ -28,4 +28,9 @@ class Bar():
 	def reset(self):
 		self.pos_x = self.initial_pos_x
 		self.pos_y = self.initial_pos_y
+		self.dir_x = 0
+		self.dir_y = 0
+
+	def auto_move(self, ball):
+		pass
 		

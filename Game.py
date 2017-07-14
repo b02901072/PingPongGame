@@ -1,17 +1,8 @@
 import pygame
+import random
 from Ball import *
 from Bar import *
-
-class WormHole():
-
-    def __init__(self,
-        pos_x=270,
-        pos_y=360,
-        size=75):
-
-        self.pos_x = pos_x
-        self.pos_y = pos_y
-        self.size = size
+from Effect import *
 
 class Duel():
 
@@ -33,9 +24,21 @@ class Duel():
 
         self.time_passed_in_sec = 0
 
+        # CrazyBounce
         self.is_crazybounce_on = False
-        self.is_wormhole_on = True
+
+        # WormHole
+        self.is_wormhole_on = False
+        self.wormhole_num = 2
         self.wormholes = [WormHole(270, 360), WormHole(810, 360)]
+
+        # Invisibility
+        self.is_invisibility_on = False
+
+        # Laser
+        self.is_laser_on = True
+        self.laser = Laser()
+        
 
     def start_clock(self):
         self.clock.tick()
@@ -56,7 +59,8 @@ class Duel():
             self.check_if_bar_hit_edge(bar)
         for ball in self.balls:
             self.check_if_ball_hit_edge(ball)
-            self.check_if_ball_hit_wormholes(ball)
+            if self.is_wormhole_on:
+                self.check_if_ball_hit_wormholes(ball)
             for bar in self.bars:
                 self.check_if_ball_hit_bar(ball, bar)
         self.check_winner()
@@ -67,6 +71,7 @@ class Duel():
             ball.update(self.time_passed_in_sec)
         for bar in self.bars:
             bar.update(self.time_passed_in_sec)
+        self.laser.update(self.time_passed_in_sec)
 
     def check_if_scored(self):
         return self.scorer is not None
@@ -79,7 +84,7 @@ class Duel():
 
     def check_if_ball_hit_edge(self, ball):
         # Left or Right Side
-        if ball.pos_x < ball.size and ball.dir_x < 0: 
+        if ball.pos_x < ball.size and ball.dir_x < 0:
             self.scorer = 2
             self.score_2 += 1
         elif ball.pos_x > 1080-ball.size and ball.dir_x > 0:
@@ -110,13 +115,24 @@ class Duel():
             else:
                 ball.normal_bounce_x()
 
+    def check_if_ball_hit_fog(self, ball, fog):
+        pass
+
+    def check_if_ball_hit_laser(self, ball, laser):
+        pass
+
     def check_if_ball_hit_wormholes(self, ball):
         if ball.wormhole_timer != 0:
             return
-        for wh in self.wormholes:
+        for i in range(self.wormhole_num):
+            wh = self.wormholes[i]
             if distance(ball, wh) < wh.size:
-                print('wormhole')
-                ball.wormhole_timer = 0.5
+                ball.set_wormhole_timer()
+                j = random_select_another_int(0, self.wormhole_num-1, i)
+                ball.pos_x = self.wormholes[j].pos_x
+                ball.pos_y = self.wormholes[j].pos_y
+                wh.random_pos_y()
+                break
 
 class Survival():
     pass

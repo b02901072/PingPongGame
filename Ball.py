@@ -1,6 +1,6 @@
-from util import *
 import random
 import math
+from util import *
 
 class Ball():
     def __init__(self, 
@@ -17,16 +17,23 @@ class Ball():
         self.initial_speed_y = speed_y
         self.current_speed_x = speed_x
         self.current_speed_y = speed_y
-        self.dir_x = 1
-        self.dir_y = 1
+        self.dir_x = 0
+        self.dir_y = 0
+        self.random_direction()
         self.initial_pos_x = pos_x
         self.initial_pos_y = pos_y
         self.pos_x = pos_x
         self.pos_y = pos_y
+        
         self.accel = False
 
+        self.invisible = False
+
         self.bounce_timer = 0
+        self.bounce_timeout = 0.1
+
         self.wormhole_timer = 0
+        self.wormhole_timeout = 0.3
 
     def update(self, time_in_sec):
         self.pos_x += self.current_speed_x * time_in_sec * self.dir_x
@@ -37,6 +44,12 @@ class Ball():
             self.bounce_timer = 0
         if self.wormhole_timer < 0:
             self.wormhole_timer = 0
+        '''
+        if self.pos_x > 0.3*1080 and self.pos_x < 0.7*1080:
+            self.invisible = True
+        else:
+            self.invisible = False
+        '''
 
     def reset(self):
         self.pos_x = self.initial_pos_x
@@ -57,7 +70,7 @@ class Ball():
             self.dir_x *= -1
             if self.accel == True:
                 self.accel = False
-            self.bounce_timer = 0.2
+            self.set_bounce_timer()
 
     def crazy_bounce_x(self):
         if self.bounce_timer == 0:
@@ -68,14 +81,14 @@ class Ball():
             self.random_direction()
             if self.accel == True:
                 self.accel = False
-            self.bounce_timer = 0.2
+            self.set_bounce_timer()
 
     def normal_bounce_y(self):
         if self.bounce_timer == 0:
             self.dir_y *= -1
             if self.accel == True:
                 self.accel = False
-            self.bounce_timer = 0.2
+            self.set_bounce_timer()
 
     def crazy_bounce_y(self):
         if self.bounce_timer == 0:
@@ -86,5 +99,11 @@ class Ball():
             self.random_direction()
             if self.accel == True:
                 self.accel = False
-            self.bounce_timer = 0.2
+            self.set_bounce_timer()
+
+    def set_bounce_timer(self):
+        self.bounce_timer = self.bounce_timeout
+
+    def set_wormhole_timer(self):
+        self.wormhole_timer = self.wormhole_timeout
     

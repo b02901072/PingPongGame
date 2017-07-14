@@ -1,5 +1,16 @@
 import pygame
-import sys, math
+import sys, math, random
+
+# Definition
+class COLOR():
+	BLACK = 0, 0, 0
+	WHITE = 255, 255, 255
+	GRAY = 150, 150, 150
+	LIGHT_GRAY = 200, 200, 200
+	RED = 255, 0, 0
+	GREEN = 0, 255, 0
+	BLUE = 0, 0, 255
+	YELLOW = 255, 255, 0
 
 # Utility Function
 def quit_game():
@@ -8,25 +19,25 @@ def quit_game():
     sys.exit()
 
 def posi_or_nega(x):
-	if x >= 0:
+	if x > 0:
 		return 1
-	else:
+	elif x < 0:
 		return -1
+	else:
+		return [-1, 1][random.randint(0, 1)]
 
 def distance(a, b):
 	return math.sqrt((a.pos_x-b.pos_x)**2 + (a.pos_y-b.pos_y)**2)
 
-# COLOR DEFINITION
-class COLOR():
-	BLACK = 0, 0, 0
-	WHITE = 255, 255, 255
-	GRAY = 150, 150, 150
-	RED = 255, 0, 0
-	GREEN = 0, 255, 0
-	BLUE = 0, 0, 255
-	YELLOW = 255, 255, 0
+def random_select_another_int(start, end, i):
+	# random select an interger in [start, end] which is not i
+	assert i >= start and i <= end
+	while True:
+		j = random.randint(start, end)
+		if j != i:
+			return j
 
-
+# Utility Class
 class SelectList():
 
 	def __init__(self, **kwargs):

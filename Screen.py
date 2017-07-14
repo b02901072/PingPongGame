@@ -42,14 +42,24 @@ class Screen():
                 self.display_diamond(cursor_size, cursor_size, pos_x - 25, pos_y + 1/4*text_size, color)
 
     def display_game(self, game):
+
+        if game.is_laser_on:
+            self.display_laser(game.laser)
         
-        if game.is_wormhole_on == True:
+        if game.is_wormhole_on:
             for wh in game.wormholes:
                 pos_x = int(wh.pos_x*self.scale)
                 pos_y = int(wh.pos_y*self.scale)
                 size = int(wh.size*self.scale)
-                #pygame.draw.circle(self.screen, COLOR.WHITE, (pos_x, pos_y), 52, 0)
                 self.screen.blit(self.wormhole_150, (pos_x-0.5*size, pos_y-0.5*size))
+
+        if game.is_invisibility_on:
+            pos_x_1 = int(0.3*1080*self.scale)
+            pos_x_2 = int(0.7*1080*self.scale)
+            pos_y_1 = int(0*self.scale)
+            pos_y_2 = int(720*self.scale)
+            pygame.draw.line(self.screen, COLOR.LIGHT_GRAY, (pos_x_1, pos_y_1), (pos_x_1, pos_y_2), 1)
+            pygame.draw.line(self.screen, COLOR.LIGHT_GRAY, (pos_x_2, pos_y_1), (pos_x_2, pos_y_2), 1)
 
         for ball in game.balls:
             self.display_ball(ball)
@@ -57,6 +67,8 @@ class Screen():
             self.display_bar(bar)
 
     def display_ball(self, ball):
+        if ball.invisible == True:
+            return
         if ball.accel == True:
             color = ball.accel_color
         else:
@@ -73,6 +85,19 @@ class Screen():
         half_length = int(0.5*bar.length * self.scale)
         width = int(bar.width * self.scale)
         pygame.draw.line(self.screen, color, (pos_x, pos_y-half_length), (pos_x, pos_y+half_length), width)
+
+    def display_laser(self, laser):
+        pos_y = int(laser.pos_y * self.scale)
+        pos_x = int(0.5*self.width * self.scale)
+        width = int(self.width * self.scale)
+        if laser.phase == 0:
+            pass
+        elif laser.phase == 1:
+            height = int(1 * self.scale)
+            pygame.draw.line(self.screen, COLOR.RED, (pos_x, pos_y), (pos_x, pos_y+height), width)
+        elif laser.phase == 2:
+            half_height = int(0.5*40 * self.scale)
+            pygame.draw.line(self.screen, COLOR.RED, (pos_x, pos_y-half_height), (pos_x, pos_y+half_height), width)
 
     def display_left_tri(self, l, h, x, y, color):
         '''
